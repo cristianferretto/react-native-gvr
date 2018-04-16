@@ -3,30 +3,40 @@
 cd ./Pods/GVRSDK/Libraries/
 lipo -info libGVRSDK.a
 
-# Divide to each platform
-lipo -thin armv7 libGVRSDK.a -output libGVRSDK_armv7
-lipo -thin i386 libGVRSDK.a -output libGVRSDK_i386
-lipo -thin x86_64 libGVRSDK.a -output libGVRSDK_x86_64
-lipo -thin arm64 libGVRSDK.a -output libGVRSDK_arm64
+architectures="armv7 i386 x86_64 arm64"
+for arch in $architectures
+do
+    echo Create thin archive libGVRSDK_$arch
+    lipo -thin $arch libGVRSDK.a -output libGVRSDK_$arch
+    chmod 777 libGVRSDK_$arch
 
-# Delete duplicate file
-chmod 777 libGVRSDK_armv7
-chmod 777 libGVRSDK_i386
-chmod 777 libGVRSDK_x86_64
-chmod 777 libGVRSDK_arm64
+    remove=""
+    for object in $(ar -t libGVRSDK_$arch)
+    do
+        if [[ ${object} == vlog_is_on_* ]]
+        then
+            echo $object
+            remove=$object
+        fi
+    done
 
-ar -dv libGVRSDK_armv7 vlog_is_on.o
-ar -dv libGVRSDK_i386 vlog_is_on.o
-ar -dv libGVRSDK_x86_64 vlog_is_on.o
-ar -dv libGVRSDK_arm64 vlog_is_on.o
+    if [ $remove ]
+    then
+        echo removing $remove from $arch
+        ar -dv libGVRSDK_$arch $remove
+    else
+        echo No symbol matching "vlog_is_on_*" found for $arch
+    fi
 
-# rm libGVRSDK.a
+done
+
+echo Rebuild libGVRSDK.a
 lipo -create libGVRSDK_armv7 libGVRSDK_i386 libGVRSDK_x86_64 libGVRSDK_arm64 -output libGVRSDK.a
 
-# Delete media
-rm libGVRSDK_armv7
-rm libGVRSDK_i386
-rm libGVRSDK_x86_64
-rm libGVRSDK_arm64
+for arch in $architectures
+do
+    rm libGVRSDK_$arch
+    echo Delete thin archive libGVRSDK_$arch
+done
 
 cd ../../../
