@@ -4,17 +4,42 @@
  * @flow
  */
 
-import React, { Component } from 'react'
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
-import { VideoView, PanoramaView } from 'react-native-gvr'
+import React from 'react'
+import { StyleSheet, Text, View, Button } from 'react-native'
+import { VideoView } from 'react-native-gvr'
 
-export default class App extends Component {
+export default class App extends React.Component {
+  state = {
+    paused: false,
+    displayMode: 'embedded'
+  }
+
+  togglePlay = () => {
+    this.setState({ paused: !this.state.paused })
+  }
+
+  setDisplayMode = displayMode => {
+    this.setState({ displayMode })
+  }
+
+  onContentLoad = event => {
+    console.log("Content load", event.nativeEvent)
+  }
+
+  onTap = () => {
+    console.log("On tap")
+  }
+
+  onUpdatePosition = event => {
+    console.log(event.nativeEvent)
+  }
+
+  onChangeDisplayMode = event => {
+    console.log(event.nativeEvent)
+  }
+
   render () {
+    const { paused, displayMode } = this.state
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
@@ -26,19 +51,28 @@ export default class App extends Component {
             uri: 'https://raw.githubusercontent.com/googlevr/gvr-ios-sdk/master/Samples/VideoWidgetDemo/resources/congo.mp4',
             type: 'mono'
           }}
-          displayMode={'embedded'}
+          displayMode={displayMode}
           volume={1}
-          paused={false}
-          enableFullscreenButton
-          enableCardboardButton
+          paused={paused}
           enableTouchTracking
+          enableFullscreenButton={displayMode !== 'embedded'}
+          enableCardboardButton={displayMode !== 'embedded'}
           hidesTransitionView
           enableInfoButton={false}
+          onContentLoad={this.onContentLoad}
+          onTap={this.onTap}
+          onUpdatePosition={this.onUpdatePosition}
+          onChangeDisplayMode={this.onChangeDisplayMode}
         />
-        {/* <PanoramaView
-          style={{ height: 300, width: 200, backgroundColor: '#ccc' }}
-          source={{ uri: 'https://roadtovrlive-5ea0.kxcdn.com/wp-content/uploads/2014/09/Venice.Still001.jpeg' }}
-        /> */}
+        <Button
+          onPress={this.togglePlay}
+          title={ paused ? 'Play' : 'Pause'} />
+        <Button
+          onPress={() => { this.setDisplayMode('fullscreen') }}
+          title='Fullscreen' />
+        <Button
+          onPress={() => { this.setDisplayMode('cardboard') }}
+          title='VR' />
       </View>
     )
   }
