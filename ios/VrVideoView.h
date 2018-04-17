@@ -22,4 +22,9 @@
 @property (nonatomic, assign) BOOL hidesTransitionView;
 @property (nonatomic, assign) BOOL enableTouchTracking;
 
+@property (nonatomic, copy) RCTBubblingEventBlock onContentLoad;
+@property (nonatomic, copy) RCTBubblingEventBlock onTap;
+@property (nonatomic, copy) RCTBubblingEventBlock onUpdatePosition;
+@property (nonatomic, copy) RCTBubblingEventBlock onChangeDisplayMode;
+
 @end

@@ -29,6 +29,10 @@ RCT_EXPORT_VIEW_PROPERTY(displayMode, NSString);
 RCT_EXPORT_VIEW_PROPERTY(src, NSDictionary);
 RCT_EXPORT_VIEW_PROPERTY(volume, float)
 
+RCT_EXPORT_VIEW_PROPERTY(onContentLoad, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onTap, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onUpdatePosition, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onChangeDisplayMode, RCTBubblingEventBlock)
 
 
 @end

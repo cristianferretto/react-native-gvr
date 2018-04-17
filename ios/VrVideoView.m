@@ -23,7 +23,6 @@ RCT_ENUM_CONVERTER(GVRWidgetDisplayMode, (@{
 
 
 @implementation VrVideoView {
-  BOOL _isPaused;
   GVRVideoView *_videoView;
   GVRVideoType __videoType;
 }
@@ -34,7 +33,6 @@ RCT_ENUM_CONVERTER(GVRWidgetDisplayMode, (@{
   self = [super initWithFrame:frame];
   _videoView = [[GVRVideoView alloc] init];
   _videoView.delegate = self;
-  _isPaused = YES;
   [self addSubview:_videoView];
   
   return self;
@@ -124,32 +122,36 @@ RCT_ENUM_CONVERTER(GVRWidgetDisplayMode, (@{
 #pragma mark - GVRVideoViewDelegate
 
 - (void)widgetViewDidTap:(GVRWidgetView *)widgetView {
-  if (_isPaused) {
-    [_videoView play];
-  } else {
-    [_videoView pause];
-  }
-  _isPaused = !_isPaused;
+    if (self.onTap != nil) {
+        self.onTap(@{});
+    }
 }
 
 - (void)widgetView:(GVRWidgetView *)widgetView didLoadContent:(id)content {
   RCTLogInfo(@"Finished loading video");
-  [_videoView play];
-  _isPaused = NO;
+    if (self.onContentLoad != nil) {
+        self.onContentLoad(@{});
+    }
 }
 
 - (void)widgetView:(GVRWidgetView *)widgetView
 didFailToLoadContent:(id)content
   withErrorMessage:(NSString *)errorMessage {
-  RCTLogInfo(@"Failed to load video: %@", errorMessage);
+    if (self.onContentLoad != nil) {
+        self.onContentLoad(@{@"error": errorMessage});
+    }
+}
+
+- (void)widgetView:(GVRWidgetView *)widgetView didChangeDisplayMode:(GVRWidgetDisplayMode)displayMode {
+    if (self.onChangeDisplayMode != nil) {
+        self.onChangeDisplayMode(@{@"mode": [NSNumber numberWithInt:displayMode]});
+    }
 }
 
 - (void)videoView:(GVRVideoView*)videoView didUpdatePosition:(NSTimeInterval)position {
-  // Loop the video when it reaches the end.
-  if (position == videoView.duration) {
-    [_videoView seekTo:0];
-    [_videoView play];
-  }
+    if (self.onUpdatePosition != nil) {
+        self.onUpdatePosition(@{@"position": [NSNumber numberWithDouble:position]});
+    }
 }
 
 
