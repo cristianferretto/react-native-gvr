@@ -4,12 +4,12 @@
  * @Last Modified by: tiero
  * @Last Modified time: 2017-01-05 17:40:04
  */
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { requireNativeComponent, ViewPropTypes } from 'react-native'
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource'
 
-class VideoView extends Component {
+class VideoView extends React.Component {
   render () {
     const source = resolveAssetSource(this.props.source) || {}
     let uri = source.uri || ''

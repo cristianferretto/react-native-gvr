@@ -4,11 +4,11 @@
  * @Last Modified by: tiero
  * @Last Modified time: 2017-01-05 17:40:19
  */
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { requireNativeComponent, Image } from 'react-native'
 
-class PanoramaView extends Component {
+class PanoramaView extends React.Component {
   render () {
     return <RCTPanoramaView {...this.props} />
   }
