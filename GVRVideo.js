@@ -6,10 +6,20 @@
  */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { requireNativeComponent, ViewPropTypes } from 'react-native'
+import { requireNativeComponent, ViewPropTypes, NativeModules, findNodeHandle } from 'react-native'
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource'
 
+const VrVideoManager = NativeModules['VrVideoManager']
+
 class VideoView extends React.Component {
+  setRef = view => {
+    this.rctView = view
+  }
+
+  seekTo (position) {
+    this.rctView && VrVideoManager && VrVideoManager.seekTo(findNodeHandle(this.rctView), position)
+  }
+
   render () {
     const source = resolveAssetSource(this.props.source) || {}
     let uri = source.uri || ''
@@ -22,6 +32,7 @@ class VideoView extends React.Component {
 
     return <RCTViedoView
       {...this.props}
+      ref={this.setRef}
       src={{
         uri,
         isNetwork,
@@ -43,6 +54,7 @@ VideoView.propTypes = {
     // Opaque type returned by require('./video.mp4')
     PropTypes.number
   ]),
+  paused: PropTypes.bool,
   videoType: PropTypes.string,
   volume: PropTypes.number,
   displayMode: PropTypes.string,

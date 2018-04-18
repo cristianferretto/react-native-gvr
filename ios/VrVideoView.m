@@ -25,97 +25,110 @@ RCT_ENUM_CONVERTER(GVRWidgetDisplayMode, (@{
 @implementation VrVideoView {
   GVRVideoView *_videoView;
   GVRVideoType __videoType;
+  BOOL _isPaused;
 }
 
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
-  self = [super initWithFrame:frame];
-  _videoView = [[GVRVideoView alloc] init];
-  _videoView.delegate = self;
-  [self addSubview:_videoView];
+    self = [super initWithFrame:frame];
+    _videoView = [[GVRVideoView alloc] init];
+    _videoView.delegate = self;
+    _isPaused = true;
+    [self addSubview:_videoView];
   
-  return self;
+    return self;
 }
 
 - (void)layoutSubviews
 {
-  float rootViewWidth = self.frame.size.width;
-  float rootViewHeight = self.frame.size.height;
-  [_videoView setFrame:CGRectMake(0, 0, rootViewWidth, rootViewHeight)];
+    float rootViewWidth = self.frame.size.width;
+    float rootViewHeight = self.frame.size.height;
+    [_videoView setFrame:CGRectMake(0, 0, rootViewWidth, rootViewHeight)];
 
 }
 
 -(void)setVolume:(float)volume
 {
-  _videoView.volume = volume;
+    _videoView.volume = volume;
 }
 
 -(void)setSrc:(NSDictionary *)src
 {
-  NSString *uri = [src objectForKey:@"uri"];
-  NSURL *url = [NSURL URLWithString:uri];
-  NSString *strType = [src objectForKey:@"type"];
-  BOOL isNetwork = [src objectForKey:@"isNetwork"];
-  
-  GVRVideoType videoType = kGVRVideoTypeMono;
-  if ([strType isEqualToString:@"stereo"]) {
-    videoType = kGVRVideoTypeStereoOverUnder;
-  }
-  
-  //play from remote url
-  if ( isNetwork ) {
-    
-    [_videoView loadFromUrl:url ofType:videoType];
-    
-  } else { // play from local
-    //Local asset: Can be in the bundle or the uri can be an absolute path of a stored video in the application
-    
-    //Check whether the file loaded from the Bundle,
-    NSString *localPath = [[NSBundle mainBundle] pathForResource:uri ofType:@"mp4"];
-    if (localPath) {
-      //Let's replace the `uri` to the full path'
-      uri = localPath;
+    NSString *uri = [src objectForKey:@"uri"];
+    NSURL *url = [NSURL URLWithString:uri];
+    NSString *strType = [src objectForKey:@"type"];
+    BOOL isNetwork = [src objectForKey:@"isNetwork"];
+
+    GVRVideoType videoType = kGVRVideoTypeMono;
+    if ([strType isEqualToString:@"stereo"]) {
+        videoType = kGVRVideoTypeStereoOverUnder;
     }
-    url = [NSURL fileURLWithPath:uri];
-    // [_videoView loadFromUrl:[[NSURL alloc] initFileURLWithPath:videoPath]
-    //                   ofType:videoType];
-    [_videoView loadFromUrl:url ofType:videoType];
-  }
-  
-  [_videoView pause];
+
+    //play from remote url
+    if ( isNetwork ) {
+        [_videoView loadFromUrl:url ofType:videoType];
+    } else { // play from local
+        NSString *localPath = [[NSBundle mainBundle] pathForResource:uri ofType:@"mp4"];
+        if (localPath) {
+            //Let's replace the `uri` to the full path'
+            uri = localPath;
+        }
+        url = [NSURL fileURLWithPath:uri];
+        [_videoView loadFromUrl:url ofType:videoType];
+    }
+    [_videoView pause];
+}
+
+- (void)setPaused:(BOOL)paused
+{
+    _isPaused = paused;
+    if (_videoView != nil) {
+        if (paused) {
+            [_videoView pause];
+        } else {
+            [_videoView play];
+        }
+    }
 }
 
 - (void)setDisplayMode:(NSString *)displayMode
 {
-  //Display mode default Embedded
-  _videoView.displayMode = [RCTConvert GVRWidgetDisplayMode:displayMode];
+    //Display mode default Embedded
+    _videoView.displayMode = [RCTConvert GVRWidgetDisplayMode:displayMode];
 }
 
 
 - (void)setEnableFullscreenButton:(BOOL)enableFullscreenButton
 {
-  _videoView.enableFullscreenButton = enableFullscreenButton;
+    _videoView.enableFullscreenButton = enableFullscreenButton;
 }
 
 -(void)setEnableInfoButton:(BOOL)enableInfoButton
 {
-  _videoView.enableInfoButton = enableInfoButton;
+    _videoView.enableInfoButton = enableInfoButton;
 }
 
 -(void)setEnableTouchTracking:(BOOL)enableTouchTracking
 {
-  _videoView.enableTouchTracking = enableTouchTracking;
+    _videoView.enableTouchTracking = enableTouchTracking;
 }
 
 -(void)setHidesTransitionView:(BOOL)hidesTransitionView
 {
-  _videoView.hidesTransitionView = hidesTransitionView;
+    _videoView.hidesTransitionView = hidesTransitionView;
 }
 
 -(void)setEnableCardboardButton:(BOOL)enableCardboardButton
 {
-  _videoView.enableCardboardButton = enableCardboardButton;
+    _videoView.enableCardboardButton = enableCardboardButton;
+}
+
+-(void)seekTo:(float)position
+{
+    if (_videoView != nil) {
+        [_videoView seekTo:position];
+    }
 }
 
 
@@ -132,6 +145,9 @@ RCT_ENUM_CONVERTER(GVRWidgetDisplayMode, (@{
     if (self.onContentLoad != nil) {
         self.onContentLoad(@{});
     }
+    if (!_isPaused) {
+        [_videoView play];
+    }
 }
 
 - (void)widgetView:(GVRWidgetView *)widgetView
@@ -144,7 +160,23 @@ didFailToLoadContent:(id)content
 
 - (void)widgetView:(GVRWidgetView *)widgetView didChangeDisplayMode:(GVRWidgetDisplayMode)displayMode {
     if (self.onChangeDisplayMode != nil) {
-        self.onChangeDisplayMode(@{@"mode": [NSNumber numberWithInt:displayMode]});
+        NSString *mode = nil;
+        switch (displayMode) {
+            case kGVRWidgetDisplayModeEmbedded:
+                mode = @"embedded";
+                break;
+            case kGVRWidgetDisplayModeFullscreen:
+                mode = @"fullscreen";
+                break;
+            case kGVRWidgetDisplayModeFullscreenVR:
+                mode = @"cardboard";
+                break;
+            default:
+                break;
+        }
+        if (mode != nil) {
+            self.onChangeDisplayMode(@{@"mode": mode});
+        }
     }
 }
 

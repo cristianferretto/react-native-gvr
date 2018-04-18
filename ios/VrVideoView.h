@@ -15,6 +15,7 @@
 
 @property (nonatomic, assign) float volume;
 @property (nonatomic, assign) NSDictionary* src;
+@property (nonatomic, assign) BOOL paused;
 @property (nonatomic, assign) NSString* displayMode;
 @property (nonatomic, assign) BOOL enableFullscreenButton;
 @property (nonatomic, assign) BOOL enableCardboardButton;
@@ -26,5 +27,7 @@
 @property (nonatomic, copy) RCTBubblingEventBlock onTap;
 @property (nonatomic, copy) RCTBubblingEventBlock onUpdatePosition;
 @property (nonatomic, copy) RCTBubblingEventBlock onChangeDisplayMode;
+
+- (void)seekTo:(float)position;
 
 @end
