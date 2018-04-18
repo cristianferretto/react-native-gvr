@@ -6,6 +6,8 @@
 //  Copyright © 2016 Facebook. All rights reserved.
 //
 #import <React/RCTViewManager.h>
+#import <React/RCTBridge.h>
+#import <React/RCTUIManager.h>
 
 @interface PanoramaManager : RCTViewManager
 

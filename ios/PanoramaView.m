@@ -23,9 +23,9 @@ RCT_ENUM_CONVERTER(GVRWidgetDisplayMode, (@{
 
 
 @implementation PanoramaView {
-  UIImage *_image;
-  NSString *__imageType;
-  GVRPanoramaView *_panoView;
+    UIImage *_image;
+    NSString *__imageType;
+    GVRPanoramaView *_panoView;
 }
 
 - (dispatch_queue_t)methodQueue
@@ -35,55 +35,48 @@ RCT_ENUM_CONVERTER(GVRWidgetDisplayMode, (@{
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
-  self = [super initWithFrame:frame];
-  _panoView = [[GVRPanoramaView alloc] init];
-  _panoView.delegate = self;
-  [self addSubview:_panoView];
-  
-  return self;
+    self = [super initWithFrame:frame];
+    _panoView = [[GVRPanoramaView alloc] init];
+    _panoView.delegate = self;
+    [self addSubview:_panoView];
+    
+    return self;
 }
+
 
 - (void)layoutSubviews
 {
   float rootViewWidth = self.frame.size.width;
   float rootViewHeight = self.frame.size.height;
   [_panoView setFrame:CGRectMake(0, 0, rootViewWidth, rootViewHeight)];
-
 }
 
-
--(void)setImageUrl:(NSString *)imageUrl
+-(void)setSrc:(NSDictionary *)src
 {
-  NSURL *url = [NSURL URLWithString:imageUrl];
-  NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
-  
-  if (imageUrl) {
-    RCTImageLoader *loader = [[RCTImageLoader alloc] init];
+    NSString *uri = [src objectForKey:@"uri"];
+    NSURL *url = [NSURL URLWithString:uri];
+    NSString *strType = [src objectForKey:@"type"];
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
+
+    GVRPanoramaImageType imageType = kGVRPanoramaImageTypeMono;
+    if ([strType isEqualToString:@"stereo"]) {
+        imageType = kGVRPanoramaImageTypeStereoOverUnder;
+    }
     
     __weak PanoramaView *weakSelf = self;
-    
-    [loader loadImageWithURLRequest:request callback:^(NSError *error, UIImage *networkImage) {
-      
-      if (!error) {
-        [[self getPanoramaView]  loadImage:networkImage ofType:kGVRPanoramaImageTypeStereoOverUnder];
-      } else {
-        RCTLogWarn(@"[PanoramaView] Could not fetch image.");
-      }
-      
-      dispatch_async([weakSelf methodQueue], ^{
-        RCTLogInfo(@"Image on disk");
-        [[self getPanoramaView] loadImage:networkImage ofType:kGVRPanoramaImageTypeStereoOverUnder];
 
-      });
+    [self.bridge.imageLoader loadImageWithURLRequest:request callback:^(NSError *error, UIImage *networkImage) {
+        if (!error) {
+            [_panoView loadImage:networkImage ofType:imageType];
+        } else {
+            RCTLogWarn(@"[PanoramaView] Could not fetch image.");
+        }
+        dispatch_async([weakSelf methodQueue], ^{
+            RCTLogInfo(@"Image on disk");
+            [_panoView loadImage:networkImage ofType:imageType];
+            
+        });
     }];
-  }
-}
-
-- (void)setImage:(UIImage *)image
-{
-  // Load the image
-  [_panoView loadImage:image ofType:kGVRPanoramaImageTypeStereoOverUnder];
-
 }
 
 - (void)setDisplayMode:(NSString *)displayMode
@@ -122,24 +115,40 @@ RCT_ENUM_CONVERTER(GVRWidgetDisplayMode, (@{
 #pragma mark - GVRWidgetViewDelegate
 
 - (void)widgetView:(GVRWidgetView *)widgetView didLoadContent:(id)content {
-  RCTLogInfo(@"Loaded panorama image");
+    if (self.onContentLoad != nil) {
+        self.onContentLoad(@{});
+    }
 }
 - (void)widgetView:(GVRWidgetView *)widgetView didFailToLoadContent:(id)content withErrorMessage:(NSString *)errorMessage {
-  RCTLogInfo(@"Error : %@",errorMessage);
+    if (self.onContentLoad != nil) {
+        self.onContentLoad(@{@"error": errorMessage});
+    }
 }
 - (void)widgetView:(GVRWidgetView *)widgetView didChangeDisplayMode:(GVRWidgetDisplayMode)displayMode  {
-  RCTLogInfo(@"Changed Display");
+    if (self.onChangeDisplayMode != nil) {
+        NSString *mode = nil;
+        switch (displayMode) {
+            case kGVRWidgetDisplayModeEmbedded:
+                mode = @"embedded";
+                break;
+            case kGVRWidgetDisplayModeFullscreen:
+                mode = @"fullscreen";
+                break;
+            case kGVRWidgetDisplayModeFullscreenVR:
+                mode = @"cardboard";
+                break;
+            default:
+                break;
+        }
+        if (mode != nil) {
+            self.onChangeDisplayMode(@{@"mode": mode});
+        }
+    }
 }
 - (void)widgetViewDidTap {
-  RCTLogInfo(@"Widget view did tapped");
+    if (self.onTap != nil) {
+        self.onTap(@{});
+    }
 }
-
-
-
-- (GVRPanoramaView *)getPanoramaView {
-  return _panoView;
-}
-
-
           
 @end

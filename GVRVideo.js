@@ -21,22 +21,12 @@ class VideoView extends React.Component {
   }
 
   render () {
-    const source = resolveAssetSource(this.props.source) || {}
-    let uri = source.uri || ''
-    if (uri && uri.match(/^\//)) {
-      uri = `file://${uri}`
-    }
-
-    const isNetwork = !!(uri && uri.match(/^https?:/))
-    const isAsset = !!(uri && uri.match(/^(assets-library|content|ms-appx|ms-appdata):/))
-
+    const { source } = this.props
     return <RCTViedoView
       {...this.props}
       ref={this.setRef}
       src={{
-        uri,
-        isNetwork,
-        isAsset,
+        uri: source.uri,
         type: source.type || ''
       }}
     />
@@ -50,12 +40,9 @@ VideoView.propTypes = {
     PropTypes.shape({
       uri: PropTypes.string,
       type: PropTypes.string
-    }),
-    // Opaque type returned by require('./video.mp4')
-    PropTypes.number
+    })
   ]),
   paused: PropTypes.bool,
-  videoType: PropTypes.string,
   volume: PropTypes.number,
   displayMode: PropTypes.string,
   enableFullscreenButton: PropTypes.bool,

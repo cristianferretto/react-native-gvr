@@ -10,7 +10,11 @@ import { VideoView } from 'react-native-gvr'
 
 const VIDEO_DURATION = 316.52
 
-export default class App extends React.Component {
+export default class VideoScreen extends React.Component {
+  static navigationOptions = {
+    title: 'VideoView'
+  }
+
   state = {
     paused: true,
     displayMode: 'embedded',
@@ -58,14 +62,11 @@ export default class App extends React.Component {
     const { paused, displayMode, progress } = this.state
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          VideoView
-        </Text>
-        <View style={styles.videoContainer}>
+        <View style={styles.contentContainer}>
           <VideoView
-            style={styles.video}
+            style={styles.content}
             source={{
-              uri: 'https://video-cdn.dn.se/M/V/o/e/oeaky5JMkZQx9KTZf4pcLQ_auto_hls.ssl.m3u8?v=2&token=01db2faeb4174b6fc86c4', //'https://raw.githubusercontent.com/googlevr/gvr-ios-sdk/master/Samples/VideoWidgetDemo/resources/congo.mp4',
+              uri: 'https://raw.githubusercontent.com/googlevr/gvr-ios-sdk/master/Samples/VideoWidgetDemo/resources/congo.mp4',
               type: 'stereo'
             }}
             ref={this.setRef}
@@ -105,16 +106,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5FCFF'
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10
-  },
-  videoContainer: {
+  contentContainer: {
     width: '100%',
     paddingHorizontal: 10
   },
-  video: {
+  content: {
     width: '100%',
     aspectRatio: 16 / 9,
   }

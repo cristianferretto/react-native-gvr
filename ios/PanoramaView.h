@@ -12,20 +12,20 @@
 
 @class RCTBridge;
 
-
-
 @interface PanoramaView : RCTView <GVRWidgetViewDelegate>
-
 
 @property (nonatomic, weak) RCTBridge *bridge;
 
-@property (nonatomic, copy) UIImage* image;
-@property (nonatomic, copy) NSString* imageUrl;
+@property (nonatomic, assign) NSDictionary* src;
 @property (nonatomic, assign) NSString* displayMode;
 @property (nonatomic, assign) BOOL enableFullscreenButton;
 @property (nonatomic, assign) BOOL enableCardboardButton;
 @property (nonatomic, assign) BOOL enableInfoButton;
 @property (nonatomic, assign) BOOL hidesTransitionView;
 @property (nonatomic, assign) BOOL enableTouchTracking;
+
+@property (nonatomic, copy) RCTBubblingEventBlock onContentLoad;
+@property (nonatomic, copy) RCTBubblingEventBlock onTap;
+@property (nonatomic, copy) RCTBubblingEventBlock onChangeDisplayMode;
 
 @end

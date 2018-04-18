@@ -6,23 +6,38 @@
  */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { requireNativeComponent, Image } from 'react-native'
+import { requireNativeComponent, ViewPropTypes } from 'react-native'
 
 class PanoramaView extends React.Component {
   render () {
-    return <RCTPanoramaView {...this.props} />
+    const { source } = this.props
+    return <RCTPanoramaView
+      {...this.props}
+      src={{
+        uri: source.uri,
+        type: source.type || ''
+      }} />
   }
 }
 
 PanoramaView.propTypes = {
-  image: Image.propTypes.source,
-  imageUrl: PropTypes.string,
+  ...ViewPropTypes,
+  src: PropTypes.object,
+  source: PropTypes.oneOfType([
+    PropTypes.shape({
+      uri: PropTypes.string,
+      type: PropTypes.string
+    })
+  ]),
   displayMode: PropTypes.string,
   enableFullscreenButton: PropTypes.bool,
   enableCardboardButton: PropTypes.bool,
   enableInfoButton: PropTypes.bool,
   enableTouchTracking: PropTypes.bool,
-  hidesTransitionView: PropTypes.bool
+  hidesTransitionView: PropTypes.bool,
+  onContentLoad: PropTypes.func,
+  onTap: PropTypes.func,
+  onChangeDisplayMode: PropTypes.func
 }
 
 // requireNativeComponent automatically resolves this to "PanoramaManager"

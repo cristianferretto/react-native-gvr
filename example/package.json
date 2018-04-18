@@ -12,6 +12,7 @@
   "dependencies": {
     "react": "16.0.0",
     "react-native": "0.51.0",
-    "react-native-gvr": "file:../"
+    "react-native-gvr": "file:../",
+    "react-navigation": "^1.5.11"
   }
 }

@@ -45,7 +45,6 @@ RCT_ENUM_CONVERTER(GVRWidgetDisplayMode, (@{
     float rootViewWidth = self.frame.size.width;
     float rootViewHeight = self.frame.size.height;
     [_videoView setFrame:CGRectMake(0, 0, rootViewWidth, rootViewHeight)];
-
 }
 
 -(void)setVolume:(float)volume
@@ -58,25 +57,13 @@ RCT_ENUM_CONVERTER(GVRWidgetDisplayMode, (@{
     NSString *uri = [src objectForKey:@"uri"];
     NSURL *url = [NSURL URLWithString:uri];
     NSString *strType = [src objectForKey:@"type"];
-    BOOL isNetwork = [src objectForKey:@"isNetwork"];
 
     GVRVideoType videoType = kGVRVideoTypeMono;
     if ([strType isEqualToString:@"stereo"]) {
         videoType = kGVRVideoTypeStereoOverUnder;
     }
 
-    //play from remote url
-    if ( isNetwork ) {
-        [_videoView loadFromUrl:url ofType:videoType];
-    } else { // play from local
-        NSString *localPath = [[NSBundle mainBundle] pathForResource:uri ofType:@"mp4"];
-        if (localPath) {
-            //Let's replace the `uri` to the full path'
-            uri = localPath;
-        }
-        url = [NSURL fileURLWithPath:uri];
-        [_videoView loadFromUrl:url ofType:videoType];
-    }
+    [_videoView loadFromUrl:url ofType:videoType];
     [_videoView pause];
 }
 
