@@ -106,8 +106,6 @@ public class VrVideoManager extends SimpleViewManager<VrVideoView> {
 
         String type = src.getString("type");
         String uri = src.getString("uri");
-        Boolean isNetwork = src.getBoolean("isNetwork");
-        Boolean isAsset = src.getBoolean("isAsset");
 
         VrVideoView.Options videoOptions = new VrVideoView.Options();
         videoOptions.inputFormat = VrVideoView.Options.FORMAT_DEFAULT;
@@ -123,7 +121,7 @@ public class VrVideoManager extends SimpleViewManager<VrVideoView> {
                 videoOptions.inputType = VrVideoView.Options.TYPE_MONO;
                 break;
         }
-        Source source = new Source(uri, videoOptions, isNetwork, isAsset);
+        Source source = new Source(uri, videoOptions);
         VideoLoaderTask videoLoaderTask = new VideoLoaderTask();
         videoLoaderTask.execute(source);
     }
@@ -165,14 +163,10 @@ public class VrVideoManager extends SimpleViewManager<VrVideoView> {
     class Source {
         public String uri;
         public VrVideoView.Options options;
-        public Boolean isAsset;
-        public Boolean isNetwork;
 
-        public Source(String uri, VrVideoView.Options videoOptions, Boolean isNetwork, Boolean isAsset) {
+        public Source(String uri, VrVideoView.Options videoOptions) {
             this.uri = uri;
             this.options = videoOptions;
-            this.isNetwork = isNetwork;
-            this.isAsset = isAsset;
         }
     }
 
@@ -180,12 +174,8 @@ public class VrVideoManager extends SimpleViewManager<VrVideoView> {
         @SuppressWarnings("WrongThread")
         protected Boolean doInBackground(Source... args) {
             try {
-                if (args[0].isAsset) {
-                    view.loadVideoFromAsset(args[0].uri, args[0].options);
-                } else {
-                    Uri uri = Uri.parse(args[0].uri);
-                    view.loadVideo(uri, args[0].options);
-                }
+                Uri uri = Uri.parse(args[0].uri);
+                view.loadVideo(uri, args[0].options);
             } catch (IOException e) {}
 
             return true;
