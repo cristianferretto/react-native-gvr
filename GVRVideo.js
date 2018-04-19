@@ -19,7 +19,7 @@ class VideoView extends React.Component {
 
   seekTo (position) {
     if (IS_IOS) {
-      VrVideoManager.seekTo(findNodeHandle(this.rctView), position)
+      VrVideoModule.seekTo(findNodeHandle(this.rctView), position)
     } else {
      UIManager.dispatchViewManagerCommand(
        findNodeHandle(this.rctView),
@@ -35,7 +35,7 @@ class VideoView extends React.Component {
 
   getPlayableDuration () {
     if (IS_IOS) {
-      return VrVideoManager.getPlayableDuration(findNodeHandle(this.rctView))
+      return VrVideoModule.getPlayableDuration(findNodeHandle(this.rctView))
     } else {
       return new Promise((resolve, reject) => {
         reject('getPlayableDuration not supported on Android')
