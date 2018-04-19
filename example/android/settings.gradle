@@ -1,4 +1,4 @@
-rootProject.name = 'example'
+rootProject.name = 'RCTGVRExample'
 include ':react-native-gvr'
 project(':react-native-gvr').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-gvr/android')
 
