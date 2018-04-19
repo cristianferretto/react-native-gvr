@@ -15,6 +15,7 @@ import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 
+import com.google.vr.sdk.widgets.common.VrWidgetView;
 import com.google.vr.sdk.widgets.pano.VrPanoramaEventListener;
 import com.google.vr.sdk.widgets.pano.VrPanoramaView;
 import com.google.vr.sdk.widgets.pano.VrPanoramaView.Options;
@@ -35,38 +36,33 @@ import org.apache.commons.io.IOUtils;
 public class PanoramaView extends RelativeLayout {
     private static final String TAG = PanoramaView.class.getSimpleName();
 
-    private PanoramaViewManager _manager;
-    private Activity _activity;
-
     private VrPanoramaView panoWidgetView;
     private Map<URL, Bitmap> imageCache = new HashMap<>();
     private ImageLoaderTask imageLoaderTask;
     private Options panoOptions = new Options();
 
     private URL imageUrl;
-    private int imageWidth;
-    private int imageHeight;
 
     @UiThread
-    public PanoramaView(Context context, PanoramaViewManager manager, Activity activity) {
+    public PanoramaView(Context context, Activity activity) {
         super(context);
-        _manager = manager;
-        _activity = activity;
+        panoWidgetView = new VrPanoramaView(activity);
+        panoWidgetView.setEventListener(new ActivityEventListener());
+        this.addView(panoWidgetView);
     }
 
     public void onAfterUpdateTransaction() {
-        panoWidgetView = new VrPanoramaView(_activity);
-        panoWidgetView.setEventListener(new ActivityEventListener());
-        panoWidgetView.setStereoModeButtonEnabled(false);
-        panoWidgetView.setInfoButtonEnabled(false);
-        panoWidgetView.setFullscreenButtonEnabled(false);
-        this.addView(panoWidgetView);
-
         if (imageLoaderTask != null) {
             imageLoaderTask.cancel(true);
         }
         imageLoaderTask = new ImageLoaderTask();
         imageLoaderTask.execute(Pair.create(imageUrl, panoOptions));
+    }
+
+
+    public void shutdown() {
+        panoWidgetView.pauseRendering();
+        panoWidgetView.shutdown();
     }
 
     public void setImageUrl(String value) {
@@ -77,14 +73,58 @@ public class PanoramaView extends RelativeLayout {
         } catch(MalformedURLException e) {}
     }
 
-    public void setDimensions(int width, int height) {
-        this.imageWidth = width;
-        this.imageHeight = height;
+    public void setInputType(String type) {
+        switch (type) {
+            case "mono":
+                panoOptions.inputType = Options.TYPE_MONO;
+                break;
+            case "stereo":
+                panoOptions.inputType = Options.TYPE_STEREO_OVER_UNDER;
+                break;
+            default:
+                panoOptions.inputType = Options.TYPE_MONO;
+                break;
+        }
     }
 
-    public void setInputType(int value) {
-        if (panoOptions.inputType == value) { return; }
-        panoOptions.inputType = value;
+    public void setDisplayMode(String mode) {
+        int displayMode;
+        switch(mode) {
+            case "embedded":
+                displayMode = VrWidgetView.DisplayMode.EMBEDDED;
+                break;
+            case "fullscreen":
+                displayMode = VrWidgetView.DisplayMode.FULLSCREEN_MONO;
+                break;
+            case "cardboard":
+                displayMode = VrWidgetView.DisplayMode.FULLSCREEN_STEREO;
+                break;
+            default:
+                displayMode = VrWidgetView.DisplayMode.EMBEDDED;
+                break;
+        }
+        panoWidgetView.setDisplayMode(displayMode);
+
+    }
+
+    public void setFullscreenButtonEnabled(Boolean enabled) {
+        panoWidgetView.setFullscreenButtonEnabled(enabled);
+    }
+
+    public void setCardboardButtonEnabled(Boolean enabled) {
+        panoWidgetView.setStereoModeButtonEnabled(enabled);
+    }
+
+    public void setTouchTrackingEnabled(Boolean enabled) {
+        panoWidgetView.setTouchTrackingEnabled(enabled);
+    }
+
+    public void setTransitionViewEnabled(Boolean enabled) {
+        panoWidgetView.setTransitionViewEnabled(!enabled);
+    }
+
+    public void setInfoButtonEnabled(Boolean enabled) {
+        panoWidgetView.setInfoButtonEnabled(enabled);
     }
 
     class ImageLoaderTask extends AsyncTask<Pair<URL, Options>, Void, Boolean> {
@@ -116,7 +156,6 @@ public class PanoramaView extends RelativeLayout {
             }
 
             image = imageCache.get(imageUrl);
-
             panoWidgetView.loadImageFromBitmap(image, panoOptions);
 
             return true;
@@ -125,14 +164,6 @@ public class PanoramaView extends RelativeLayout {
         private Bitmap decodeSampledBitmap(InputStream inputStream) throws IOException {
             final byte[] bytes = getBytesFromInputStream(inputStream);
             BitmapFactory.Options options = new BitmapFactory.Options();
-
-            if(imageWidth != 0 && imageHeight != 0) {
-                options.inJustDecodeBounds = true;
-                BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
-
-                options.inSampleSize = calculateInSampleSize(options, imageWidth, imageHeight);
-                options.inJustDecodeBounds = false;
-            }
 
             return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
         }
@@ -170,16 +201,43 @@ public class PanoramaView extends RelativeLayout {
     }
 
     private class ActivityEventListener extends VrPanoramaEventListener {
+
         @Override
         public void onLoadSuccess() {
-            emitEvent("onImageLoaded", null);
+            emitEvent("onContentLoad", null);
         }
 
         @Override
         public void onLoadError(String errorMessage) {
-            Log.e(TAG, "Error loading pano: " + errorMessage);
+            WritableMap event = Arguments.createMap();
+            event.putString("error", errorMessage);
+            emitEvent("onContentLoad", event);
+        }
 
-            emitEvent("onImageLoadingFailed", null);
+        @Override
+        public void onClick() {
+            emitEvent("onTap", null);
+        }
+
+        @Override
+        public void onDisplayModeChanged(int newDisplayMode) {
+            String mode = "";
+            switch (newDisplayMode) {
+                case VrWidgetView.DisplayMode.EMBEDDED:
+                    mode = "embedded";
+                    break;
+                case VrWidgetView.DisplayMode.FULLSCREEN_MONO:
+                    mode = "fullscreen";
+                    break;
+                case VrWidgetView.DisplayMode.FULLSCREEN_STEREO:
+                    mode = "cardboard";
+                    break;
+                default:
+                    break;
+            }
+            WritableMap event = Arguments.createMap();
+            event.putString("mode", mode);
+            emitEvent("onChangeDisplayMode", event);
         }
     }
 

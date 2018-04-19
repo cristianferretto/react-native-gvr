@@ -44,6 +44,7 @@ public class VrVideoManager extends SimpleViewManager<VideoView> {
     public void onDropViewInstance(VideoView view) {
         super.onDropViewInstance(view);
         view.setPaused(true);
+        view.shutdown();
         view = null;
     }
 

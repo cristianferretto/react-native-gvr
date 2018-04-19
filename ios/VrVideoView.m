@@ -145,7 +145,6 @@ RCT_ENUM_CONVERTER(GVRWidgetDisplayMode, (@{
 }
 
 - (void)widgetView:(GVRWidgetView *)widgetView didLoadContent:(id)content {
-  RCTLogInfo(@"Finished loading video");
     if (self.onContentLoad != nil) {
         self.onContentLoad(@{});
     }
@@ -187,7 +186,7 @@ didFailToLoadContent:(id)content
 - (void)videoView:(GVRVideoView*)videoView didUpdatePosition:(NSTimeInterval)position {
     if (self.onUpdatePosition != nil) {
         float progress = position / _videoView.duration;
-        self.onUpdatePosition(@{@"position": [NSNumber numberWithDouble:progress], @"duration": [NSNumber numberWithDouble:_videoView.duration, @"playableDuration": [NSNumber numberWithDouble:_videoView.playableDuration]]});
+        self.onUpdatePosition(@{@"position": [NSNumber numberWithDouble:progress], @"duration": [NSNumber numberWithDouble:_videoView.duration], @"playableDuration": [NSNumber numberWithDouble:_videoView.playableDuration]});
     }
 }
 

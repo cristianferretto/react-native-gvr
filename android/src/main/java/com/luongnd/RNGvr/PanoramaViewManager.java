@@ -12,13 +12,12 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 public class PanoramaViewManager extends SimpleViewManager<PanoramaView> {
-    private static final String REACT_CLASS = "RNGoogleVRPanorama";
+    private static final String REACT_CLASS = "Panorama";
 
-    private ReactApplicationContext _context;
+    private PanoramaView view;
 
     public PanoramaViewManager(ReactApplicationContext context) {
         super();
-        _context = context;
     }
 
     @Override
@@ -28,7 +27,15 @@ public class PanoramaViewManager extends SimpleViewManager<PanoramaView> {
 
     @Override
     public PanoramaView createViewInstance(ThemedReactContext context) {
-        return new PanoramaView(context, this, context.getCurrentActivity());
+        view = new PanoramaView(context, context.getCurrentActivity());
+        return view;
+    }
+
+    @Override
+    public void onDropViewInstance(PanoramaView view) {
+        super.onDropViewInstance(view);
+        view.shutdown();
+        view = null;
     }
 
     @Override
@@ -37,31 +44,50 @@ public class PanoramaViewManager extends SimpleViewManager<PanoramaView> {
         view.onAfterUpdateTransaction();
     }
 
+    @ReactProp(name = "src")
+    public void setSrc(PanoramaView view, ReadableMap src) {
+        String imageUrl = src.getString("uri");
+        String type = src.getString("type");
+        view.setImageUrl(imageUrl);
+        view.setInputType(type);
+
+    }
+
+    @ReactProp(name = "displayMode")
+    public void setDisplayMode(PanoramaView view, String mode) {
+        view.setDisplayMode(mode);
+    }
+
+    @ReactProp(name = "enableFullscreenButton")
+    public void setFullscreenButtonEnabled(PanoramaView view, Boolean enabled) {
+        view.setFullscreenButtonEnabled(enabled);
+    }
+
+    @ReactProp(name = "enableCardboardButton")
+    public void setCardboardButtonEnabled(PanoramaView view, Boolean enabled) {
+        view.setCardboardButtonEnabled(enabled);
+    }
+
+    @ReactProp(name = "enableTouchTracking")
+    public void setTouchTrackingEnabled(PanoramaView view, Boolean enabled) {
+        view.setTouchTrackingEnabled(enabled);
+    }
+
+    @ReactProp(name = "hidesTransitionView")
+    public void setTransitionViewEnabled(PanoramaView view, Boolean enabled) {
+        view.setTransitionViewEnabled(!enabled);
+    }
+
+    @ReactProp(name = "enableInfoButton")
+    public void setInfoButtonEnabled(PanoramaView view, Boolean enabled) {
+        view.setInfoButtonEnabled(enabled);
+    }
+
     public @Nullable Map<String, Object> getExportedCustomDirectEventTypeConstants() {
         return MapBuilder.<String, Object>builder()
-            .put("onImageLoaded", MapBuilder.of("registrationName", "onImageLoaded"))
-            .put("onImageLoadingFailed", MapBuilder.of("registrationName", "onImageLoadingFailed"))
+            .put("onContentLoad", MapBuilder.of("registrationName", "onContentLoad"))
+            .put("onTap", MapBuilder.of("registrationName", "onTap"))
+            .put("onChangeDisplayMode", MapBuilder.of("registrationName", "onChangeDisplayMode"))
             .build();
-    }
-
-    public ReactApplicationContext getContext() {
-        return _context;
-    }
-
-    @ReactProp(name = "imageUrl")
-    public void setImageUrl(PanoramaView view, String imageUrl) {
-        view.setImageUrl(imageUrl);
-    }
-
-    @ReactProp(name = "dimensions")
-    public void setDimensions(PanoramaView view, ReadableMap dimensions) {
-        int width = dimensions.getInt("width");
-        int height = dimensions.getInt("height");
-        view.setDimensions(width, height);
-    }
-
-    @ReactProp(name = "inputType")
-    public void setInputType(PanoramaView view, int type) {
-        // view.setInputType();
     }
 }

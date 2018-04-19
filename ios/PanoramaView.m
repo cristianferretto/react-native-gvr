@@ -68,11 +68,8 @@ RCT_ENUM_CONVERTER(GVRWidgetDisplayMode, (@{
     [self.bridge.imageLoader loadImageWithURLRequest:request callback:^(NSError *error, UIImage *networkImage) {
         if (!error) {
             [_panoView loadImage:networkImage ofType:imageType];
-        } else {
-            RCTLogWarn(@"[PanoramaView] Could not fetch image.");
         }
         dispatch_async([weakSelf methodQueue], ^{
-            RCTLogInfo(@"Image on disk");
             [_panoView loadImage:networkImage ofType:imageType];
             
         });

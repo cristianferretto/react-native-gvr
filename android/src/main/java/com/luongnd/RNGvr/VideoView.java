@@ -19,6 +19,8 @@ import com.google.vr.sdk.widgets.video.VrVideoView;
 
 import java.io.IOException;
 
+import javax.annotation.Nullable;
+
 public class VideoView extends RelativeLayout {
     private static final String TAG = VideoView.class.getSimpleName();
 
@@ -30,7 +32,7 @@ public class VideoView extends RelativeLayout {
     public VideoView(Context context, Activity activity) {
         super(context);
         vrView = new VrVideoView(activity);
-        vrView.setEventListener(new ActivityEventListener(this));
+        vrView.setEventListener(new ActivityEventListener());
         this.addView(vrView);
     }
 
@@ -49,6 +51,11 @@ public class VideoView extends RelativeLayout {
                 vrView.setDisplayMode(VrWidgetView.DisplayMode.EMBEDDED);
                 break;
         }
+    }
+
+    public void shutdown() {
+        vrView.pauseRendering();
+        vrView.shutdown();
     }
 
     public void setVolume(float value) {
@@ -138,53 +145,11 @@ public class VideoView extends RelativeLayout {
         vrView.seekTo(Double.valueOf(position).longValue());
     }
 
-    public void onContentLoaded() {
-        WritableMap event = Arguments.createMap();
-        ReactContext reactContext = (ReactContext)getContext();
-        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(getId(), "onContentLoad", event);
-    }
-
-    public void onContentLoadedError(String errorMessage) {
-        WritableMap event = Arguments.createMap();
-        event.putString("error", errorMessage);
-        ReactContext reactContext = (ReactContext)getContext();
-        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(getId(), "onContentLoad", event);
-    }
-
-    public void onTap() {
-        WritableMap event = Arguments.createMap();
-        ReactContext reactContext = (ReactContext)getContext();
-        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(getId(), "onTap", event);
-    }
-
-    public void onUpdatePosition(double position, double duration) {
-        WritableMap event = Arguments.createMap();
-        event.putDouble("position", position);
-        event.putDouble("duration", duration);
-        ReactContext reactContext = (ReactContext)getContext();
-        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(getId(), "onUpdatePosition", event);
-    }
-
-    public void onChangeDisplayMode(String mode) {
-        WritableMap event = Arguments.createMap();
-        event.putString("mode", mode);
-        ReactContext reactContext = (ReactContext)getContext();
-        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(getId(), "onChangeDisplayMode", event);
-    }
-
-
     private class ActivityEventListener extends VrVideoEventListener {
-        private VideoView videoView;
-        private int id;
-
-        public ActivityEventListener(VideoView view) {
-            this.videoView = view;
-        }
 
         @Override
         public void onLoadSuccess() {
-            Log.i(TAG, "Successfully loaded video ");
-            videoView.onContentLoaded();
+            emitEvent("onContentLoaded", null);
         }
 
         /**
@@ -192,9 +157,9 @@ public class VideoView extends RelativeLayout {
          */
         @Override
         public void onLoadError(String errorMessage) {
-            // An error here is normally due to being unable to decode the video format.
-            Log.e(TAG, "Error loading video: " + errorMessage);
-            videoView.onContentLoadedError(errorMessage);
+            WritableMap event = Arguments.createMap();
+            event.putString("error", errorMessage);
+            emitEvent("onContentLoaded", event);
         }
 
         /**
@@ -203,12 +168,15 @@ public class VideoView extends RelativeLayout {
         @Override
         public void onNewFrame() {
             double position = ((double)vrView.getCurrentPosition() / vrView.getDuration());
-            videoView.onUpdatePosition(position, (double)vrView.getDuration());
+            WritableMap event = Arguments.createMap();
+            event.putDouble("position", position);
+            event.putDouble("duration", (double)vrView.getDuration());
+            emitEvent("onUpdatePosition", event);
         }
 
         @Override
         public void onClick() {
-            videoView.onTap();
+            emitEvent("onTap", null);
         }
 
         @Override
@@ -227,7 +195,9 @@ public class VideoView extends RelativeLayout {
                 default:
                     break;
             }
-            videoView.onChangeDisplayMode(mode);
+            WritableMap event = Arguments.createMap();
+            event.putString("mode", mode);
+            emitEvent("onChangeDisplayMode", event);
         }
 
     }
@@ -252,5 +222,15 @@ public class VideoView extends RelativeLayout {
 
             return true;
         }
+    }
+
+
+    void emitEvent(String name, @Nullable WritableMap event) {
+        if (event == null) {
+            event = Arguments.createMap();
+        }
+        ((ReactContext)getContext())
+                .getJSModule(RCTEventEmitter.class)
+                .receiveEvent(getId(), name, event);
     }
 }
