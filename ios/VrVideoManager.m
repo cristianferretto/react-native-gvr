@@ -52,4 +52,34 @@ RCT_EXPORT_METHOD(seekTo:(nonnull NSNumber *)reactTag position:(float)position)
     }];
 }
 
+RCT_EXPORT_METHOD(getDuration:(nonnull NSNumber *)reactTag findEventsWithResolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+{
+    [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
+        VrVideoView *videoView = (VrVideoView*)viewRegistry[reactTag];
+        if ([videoView isKindOfClass:[VrVideoView class]]) {
+            NSNumber *duration = [NSNumber numberWithDouble:[videoView getDuration]];
+            resolve(@{@"duration":duration});
+        } else {
+            reject(RCTErrorUnspecified, nil, RCTErrorWithMessage(@"VrVideoView: Could not get duration"));
+            RCTLogError(@"Cannot getDuration: %@ (tag #%@) is not VrVideoView", videoView, reactTag);
+        }
+    }];
+}
+
+RCT_EXPORT_METHOD(getPlayableDuration:(nonnull NSNumber *)reactTag findEventsWithResolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+{
+    [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
+        VrVideoView *videoView = (VrVideoView*)viewRegistry[reactTag];
+        if ([videoView isKindOfClass:[VrVideoView class]]) {
+            NSNumber *playableDuration = [NSNumber numberWithDouble:[videoView getPlayableDuration]];
+            resolve(@{@"playableDuration":playableDuration});
+        } else {
+            reject(RCTErrorUnspecified, nil, RCTErrorWithMessage(@"VrVideoView: Could not get playableDuration"));
+            RCTLogError(@"Cannot getPlayableDuration: %@ (tag #%@) is not VrVideoView", videoView, reactTag);
+        }
+    }];
+}
+
 @end

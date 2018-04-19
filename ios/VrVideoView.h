@@ -28,6 +28,7 @@
 @property (nonatomic, copy) RCTBubblingEventBlock onUpdatePosition;
 @property (nonatomic, copy) RCTBubblingEventBlock onChangeDisplayMode;
 
-- (void)seekTo:(float)position;
-
+- (void)seekTo:(float)progress;
+- (NSTimeInterval)getDuration;
+- (NSTimeInterval)getPlayableDuration;
 @end

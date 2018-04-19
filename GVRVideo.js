@@ -17,7 +17,15 @@ class VideoView extends React.Component {
   }
 
   seekTo (position) {
-    this.rctView && VrVideoManager && VrVideoManager.seekTo(findNodeHandle(this.rctView), position)
+    VrVideoManager.seekTo(findNodeHandle(this.rctView), position)
+  }
+
+  getDuration () {
+    return VrVideoManager.getDuration(findNodeHandle(this.rctView))
+  }
+
+  getPlayableDuration () {
+    return VrVideoManager.getPlayableDuration(findNodeHandle(this.rctView))
   }
 
   render () {

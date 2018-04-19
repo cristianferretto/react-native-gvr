@@ -8,8 +8,6 @@ import React from 'react'
 import { StyleSheet, Text, View, Button, Slider } from 'react-native'
 import { VideoView } from 'react-native-gvr'
 
-const VIDEO_DURATION = 316.52
-
 export default class VideoScreen extends React.Component {
   static navigationOptions = {
     title: 'VideoView'
@@ -66,7 +64,7 @@ export default class VideoScreen extends React.Component {
           <VideoView
             style={styles.content}
             source={{
-              uri: 'https://raw.githubusercontent.com/googlevr/gvr-ios-sdk/master/Samples/VideoWidgetDemo/resources/congo.mp4',
+              uri: 'https://video-cdn.dn.se/M/V/o/e/oeaky5JMkZQx9KTZf4pcLQ_auto_hls.ssl.m3u8?v=2&token=01db2faeb4174b6fc86c4',
               type: 'stereo'
             }}
             ref={this.setRef}
@@ -92,7 +90,7 @@ export default class VideoScreen extends React.Component {
           <Button
             onPress={() => { this.setDisplayMode('cardboard') }}
             title='VR' />
-          <Slider value={progress} maximumValue={VIDEO_DURATION} minimumValue={0} onValueChange={this.sliderValueChange} />
+          <Slider value={progress} maximumValue={1} minimumValue={0} onValueChange={this.sliderValueChange} />
         </View>
       </View>
     )

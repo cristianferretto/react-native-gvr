@@ -111,11 +111,28 @@ RCT_ENUM_CONVERTER(GVRWidgetDisplayMode, (@{
     _videoView.enableCardboardButton = enableCardboardButton;
 }
 
--(void)seekTo:(float)position
+-(void)seekTo:(float)progress
 {
     if (_videoView != nil) {
+        float position = progress * _videoView.duration;
         [_videoView seekTo:position];
     }
+}
+
+-(NSTimeInterval)getDuration
+{
+    if (_videoView != nil) {
+        return _videoView.duration;
+    }
+    return 0;
+}
+
+-(NSTimeInterval)getPlayableDuration
+{
+    if (_videoView != nil) {
+        return _videoView.playableDuration;
+    }
+    return 0;
 }
 
 
@@ -169,7 +186,8 @@ didFailToLoadContent:(id)content
 
 - (void)videoView:(GVRVideoView*)videoView didUpdatePosition:(NSTimeInterval)position {
     if (self.onUpdatePosition != nil) {
-        self.onUpdatePosition(@{@"position": [NSNumber numberWithDouble:position]});
+        float progress = position / _videoView.duration;
+        self.onUpdatePosition(@{@"position": [NSNumber numberWithDouble:progress]});
     }
 }
 
