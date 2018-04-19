@@ -11,7 +11,6 @@
 
 ### Manual installation
 
-
 #### iOS
 
 1. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
@@ -33,8 +32,9 @@
   	```
       compile project(':react-native-gvr')
   	```
+
 ## Setup
-#### iOS 
+#### iOS
 
 - Copy `./node_modules/react-native-gvr/pod_post_install.sh` to ios folder
 
@@ -43,31 +43,6 @@
 ```shell
 target 'myProject' do
   pod 'GVRSDK'
-  # Your 'node_modules' directory is probably in the root of your project,
-  # but if not, adjust the `:path` accordingly
-  pod 'React', :path => '../node_modules/react-native', :subspecs => [
-    'Core',
-
-    'RCTActionSheet',
-    'RCTAnimation',
-    'RCTGeolocation',
-    'RCTImage',
-    'RCTLinkingIOS',
-    'RCTNetwork',
-    'RCTSettings',
-    'RCTText',
-    'RCTVibration',
-    'RCTWebSocket',
-    'BatchedBridge',
-
-  
-    'DevSupport' # Include this to enable In-App Devmenu if RN >= 0.43
-    
-    # Add any other subspecs you want to use in your project
-  ]
-  
-    # Explicitly include Yoga if you are using RN >= 0.42.0
-  pod 'Yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
 
   # Execute every pod install
   post_install do |installer|
@@ -80,7 +55,7 @@ end
 Still in ios folder install pods locally
 
 ```shell
-pod install 
+pod install
 pod update
 ```
 
@@ -90,21 +65,49 @@ pod update
 - Open `./android/app/build.gradle` then set `minSdkVersion 19`
 
 ## Usage
+### VideoView
 ```javascript
 import { VideoView } from 'react-native-gvr'
 
 <VideoView
-  style={{ height: 300, width: 200 }}
+  style={styles.content}
   source={{
     uri: 'https://raw.githubusercontent.com/googlevr/gvr-ios-sdk/master/Samples/VideoWidgetDemo/resources/congo.mp4',
-    type: 'mono'
+    type: 'stereo'
   }}
-  displayMode={'embedded'}
+  ref={this.setRef}
+  displayMode={displayMode}
   volume={1}
-  enableFullscreenButton
-  enableCardboardButton
+  paused={paused}
   enableTouchTracking
+  enableFullscreenButton={displayMode !== 'embedded'}
+  enableCardboardButton={displayMode !== 'embedded'}
   hidesTransitionView
   enableInfoButton={false}
+  onContentLoad={this.onContentLoad}
+  onTap={this.onTap}
+  onUpdatePosition={this.onUpdatePosition}
+  onChangeDisplayMode={this.onChangeDisplayMode}
+/>
+```
+### PanoramaView
+```javascript
+import { PanoramaView } from 'react-native-gvr'
+
+<PanoramaView
+  style={styles.content}
+  source={{
+    uri: 'https://upload.wikimedia.org/wikipedia/commons/1/18/Rheingauer_Dom%2C_Geisenheim%2C_360_Panorama_%28Equirectangular_projection%29.jpg',
+    type: 'mono'
+  }}
+  displayMode={displayMode}
+  enableTouchTracking
+  enableFullscreenButton={displayMode !== 'embedded'}
+  enableCardboardButton={displayMode !== 'embedded'}
+  hidesTransitionView
+  enableInfoButton={false}
+  onContentLoad={this.onContentLoad}
+  onTap={this.onTap}
+  onChangeDisplayMode={this.onChangeDisplayMode}
 />
 ```
