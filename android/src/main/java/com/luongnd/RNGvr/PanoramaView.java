@@ -35,7 +35,6 @@ import org.apache.commons.io.IOUtils;
 public class PanoramaView extends RelativeLayout {
     private static final String TAG = PanoramaView.class.getSimpleName();
 
-    private android.os.Handler _handler;
     private PanoramaViewManager _manager;
     private Activity _activity;
 
@@ -51,7 +50,6 @@ public class PanoramaView extends RelativeLayout {
     @UiThread
     public PanoramaView(Context context, PanoramaViewManager manager, Activity activity) {
         super(context);
-        _handler = new android.os.Handler();
         _manager = manager;
         _activity = activity;
     }

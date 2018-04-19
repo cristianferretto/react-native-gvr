@@ -1,20 +1,17 @@
 package com.luongnd.RNGvr;
 
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.util.Log;
-import android.util.Pair;
+import android.support.annotation.Nullable;
 
+import com.facebook.infer.annotation.Assertions;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
-import com.google.vr.sdk.widgets.common.VrWidgetView;
-import com.google.vr.sdk.widgets.video.VrVideoEventListener;
-import com.google.vr.sdk.widgets.video.VrVideoView;
 
-import java.io.IOException;
+import java.util.Map;
 
 /**
  * VrVideoManager.java
@@ -24,11 +21,11 @@ import java.io.IOException;
  *
  */
 
-public class VrVideoManager extends SimpleViewManager<VrVideoView> {
+public class VrVideoManager extends SimpleViewManager<VideoView> {
     private static final String CLASS_NAME = "VrVideo";
     private static final String TAG = VrVideoManager.class.getSimpleName();
 
-    private VrVideoView view;
+    private VideoView view;
 
     public VrVideoManager(ReactApplicationContext context) { super(); }
 
@@ -38,147 +35,100 @@ public class VrVideoManager extends SimpleViewManager<VrVideoView> {
     }
 
     @Override
-    protected VrVideoView createViewInstance(ThemedReactContext context) {
-        view = new VrVideoView(context.getCurrentActivity());
-
-        view.setEventListener(new ActivityEventListener());
-
+    protected VideoView createViewInstance(ThemedReactContext context) {
+        view = new VideoView(context, context.getCurrentActivity());
         return view;
     }
 
     @Override
-    public void onDropViewInstance(VrVideoView view) {
+    public void onDropViewInstance(VideoView view) {
         super.onDropViewInstance(view);
-        view.pauseVideo();
+        view.setPaused(true);
         view = null;
     }
 
     @ReactProp(name = "displayMode")
-    public void setDisplayMode(VrVideoView view, String mode) {
-        switch(mode) {
-            case "embedded":
-                view.setDisplayMode(VrWidgetView.DisplayMode.EMBEDDED);
-                break;
-            case "fullscreen":
-                view.setDisplayMode(VrWidgetView.DisplayMode.FULLSCREEN_MONO);
-                break;
-            case "cardboard":
-                view.setDisplayMode(VrWidgetView.DisplayMode.FULLSCREEN_STEREO);
-                break;
-            default:
-                view.setDisplayMode(VrWidgetView.DisplayMode.EMBEDDED);
-                break;
-        }
+    public void setDisplayMode(VideoView view, String mode) {
+        view.setDisplayMode(mode);
     }
 
     @ReactProp(name = "volume")
-    public void setVolume(VrVideoView view, float value) {
+    public void setVolume(VideoView view, float value) {
         view.setVolume(value);
     }
 
     @ReactProp(name = "enableFullscreenButton")
-    public void setFullscreenButtonEnabled(VrVideoView view, Boolean enabled) {
+    public void setFullscreenButtonEnabled(VideoView view, Boolean enabled) {
         view.setFullscreenButtonEnabled(enabled);
     }
 
     @ReactProp(name = "enableCardboardButton")
-    public void setCardboardButtonEnabled(VrVideoView view, Boolean enabled) {
-        view.setStereoModeButtonEnabled(enabled);
+    public void setCardboardButtonEnabled(VideoView view, Boolean enabled) {
+        view.setCardboardButtonEnabled(enabled);
     }
 
     @ReactProp(name = "enableTouchTracking")
-    public void setTouchTrackingEnabled(VrVideoView view, Boolean enabled) {
+    public void setTouchTrackingEnabled(VideoView view, Boolean enabled) {
         view.setTouchTrackingEnabled(enabled);
     }
 
     @ReactProp(name = "hidesTransitionView")
-    public void setTransitionViewEnabled(VrVideoView view, Boolean enabled) {
+    public void setTransitionViewEnabled(VideoView view, Boolean enabled) {
         view.setTransitionViewEnabled(!enabled);
     }
 
     @ReactProp(name = "enableInfoButton")
-    public void setInfoButtonEnabled(VrVideoView view, Boolean enabled) {
+    public void setInfoButtonEnabled(VideoView view, Boolean enabled) {
         view.setInfoButtonEnabled(enabled);
     }
 
+    @ReactProp(name = "paused")
+    public void setPaused(VideoView view, Boolean paused) {
+        view.setPaused(paused);
+    }
+
     @ReactProp(name = "src")
-    public void setSrc(VrVideoView view, ReadableMap src) {
+    public void setSrc(VideoView view, ReadableMap src) {
+        view.setSrc(src);
+    }
 
-        String type = src.getString("type");
-        String uri = src.getString("uri");
+    public double getDuration(VideoView view) {
+        return view.getDuration();
+    }
 
-        VrVideoView.Options videoOptions = new VrVideoView.Options();
-        videoOptions.inputFormat = VrVideoView.Options.FORMAT_DEFAULT;
+    @Override
+    public Map<String,Integer> getCommandsMap() {
+        return MapBuilder.of(
+                "seekTo",
+                1);
+    }
 
-        switch(type) {
-            case "mono":
-                videoOptions.inputType = VrVideoView.Options.TYPE_MONO;
+    @Override
+    public void receiveCommand(VideoView view, int commandType, @Nullable ReadableArray args) {
+        Assertions.assertNotNull(view);
+        Assertions.assertNotNull(args);
+        switch (commandType) {
+            case 1: {
+                view.seekTo(args.getDouble(0));
                 break;
-            case "stereo":
-                videoOptions.inputType = VrVideoView.Options.TYPE_STEREO_OVER_UNDER;
-                break;
+            }
             default:
-                videoOptions.inputType = VrVideoView.Options.TYPE_MONO;
-                break;
-        }
-        Source source = new Source(uri, videoOptions);
-        VideoLoaderTask videoLoaderTask = new VideoLoaderTask();
-        videoLoaderTask.execute(source);
-    }
-
-    private class ActivityEventListener extends VrVideoEventListener {
-        @Override
-        public void onLoadSuccess() {
-
-            Log.i(TAG, "Successfully loaded video " + view.getDuration());
-        }
-
-        /**
-         * Called by video widget on the UI thread on any asynchronous error.
-         */
-        @Override
-        public void onLoadError(String errorMessage) {
-            // An error here is normally due to being unable to decode the video format.
-            Log.e(TAG, "Error loading video: " + errorMessage);
-        }
-
-        /**
-         * Update the UI every frame.
-         */
-        @Override
-        public void onNewFrame() {
-
-        }
-
-        /**
-         * Make the video play in a loop. This method could also be used to move to the next video in
-         * a playlist.
-         */
-        @Override
-        public void onCompletion() {
-            if(view != null) view.seekTo(0);
+                throw new IllegalArgumentException(String.format(
+                        "Unsupported command %d received by %s.",
+                        commandType,
+                        getClass().getSimpleName()));
         }
     }
 
-    class Source {
-        public String uri;
-        public VrVideoView.Options options;
-
-        public Source(String uri, VrVideoView.Options videoOptions) {
-            this.uri = uri;
-            this.options = videoOptions;
-        }
-    }
-
-    class VideoLoaderTask extends AsyncTask<Source, Void, Boolean> {
-        @SuppressWarnings("WrongThread")
-        protected Boolean doInBackground(Source... args) {
-            try {
-                Uri uri = Uri.parse(args[0].uri);
-                view.loadVideo(uri, args[0].options);
-            } catch (IOException e) {}
-
-            return true;
-        }
+    @Override
+    @Nullable
+    public Map<String, Object> getExportedCustomDirectEventTypeConstants() {
+        MapBuilder.Builder<String, Object> builder = MapBuilder.builder();
+        return builder
+                .put("onContentLoad", MapBuilder.of("registrationName", "onContentLoad"))
+                .put("onTap", MapBuilder.of("registrationName", "onTap"))
+                .put("onUpdatePosition", MapBuilder.of("registrationName", "onUpdatePosition"))
+                .put("onChangeDisplayMode", MapBuilder.of("registrationName", "onChangeDisplayMode"))
+                .build();
     }
 }

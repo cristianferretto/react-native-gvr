@@ -6,10 +6,11 @@
  */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { requireNativeComponent, ViewPropTypes, NativeModules, findNodeHandle } from 'react-native'
+import { requireNativeComponent, ViewPropTypes, NativeModules, UIManager, findNodeHandle, Platform } from 'react-native'
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource'
 
-const VrVideoManager = NativeModules['VrVideoManager']
+const IS_IOS = Platform.OS === 'ios'
+const VrVideoModule = IS_IOS ? NativeModules['VrVideoManager'] : NativeModules['VrVideoModule']
 
 class VideoView extends React.Component {
   setRef = view => {
@@ -17,15 +18,40 @@ class VideoView extends React.Component {
   }
 
   seekTo (position) {
-    VrVideoManager.seekTo(findNodeHandle(this.rctView), position)
+    if (IS_IOS) {
+      VrVideoManager.seekTo(findNodeHandle(this.rctView), position)
+    } else {
+     UIManager.dispatchViewManagerCommand(
+       findNodeHandle(this.rctView),
+       UIManager.VrVideo.Commands.seekTo,
+       [position]
+     )
+    }
   }
 
   getDuration () {
-    return VrVideoManager.getDuration(findNodeHandle(this.rctView))
+    return VrVideoModule.getDuration(findNodeHandle(this.rctView))
   }
 
   getPlayableDuration () {
-    return VrVideoManager.getPlayableDuration(findNodeHandle(this.rctView))
+    if (IS_IOS) {
+      return VrVideoManager.getPlayableDuration(findNodeHandle(this.rctView))
+    } else {
+      return new Promise((resolve, reject) => {
+        reject('getPlayableDuration not supported on Android')
+      })
+    }
+  }
+
+  getFormat(uri) {
+    if (uri.includes('.m3u8')) {
+      return 'hls'
+    } else if (uri.includes('.mpeg')) {
+      return 'mpeg'
+    } else if (uri.includes('.mp4')) {
+      return 'mp4'
+    }
+    return 'mp4'
   }
 
   render () {
@@ -35,7 +61,8 @@ class VideoView extends React.Component {
       ref={this.setRef}
       src={{
         uri: source.uri,
-        type: source.type || ''
+        type: source.type || '',
+        format: this.getFormat(source.uri)
       }}
     />
   }

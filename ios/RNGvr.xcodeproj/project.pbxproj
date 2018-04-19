@@ -31,24 +31,24 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libRNGvr.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNGvr.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		5381348120860ED80052BEA2 /* gvr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = gvr.h; path = Sources/vr/gvr/capi/include/gvr.h; sourceTree = "<group>"; };
-		5381348220860ED80052BEA2 /* gvr_audio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = gvr_audio.h; path = Sources/vr/gvr/capi/include/gvr_audio.h; sourceTree = "<group>"; };
-		5381348320860ED80052BEA2 /* gvr_audio_surround.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = gvr_audio_surround.h; path = Sources/vr/gvr/capi/include/gvr_audio_surround.h; sourceTree = "<group>"; };
-		5381348420860ED80052BEA2 /* gvr_types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = gvr_types.h; path = Sources/vr/gvr/capi/include/gvr_types.h; sourceTree = "<group>"; };
-		5381348520860ED80052BEA2 /* gvr_version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = gvr_version.h; path = Sources/vr/gvr/capi/include/gvr_version.h; sourceTree = "<group>"; };
-		5381348620860ED80052BEA2 /* GVRAudioEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GVRAudioEngine.h; path = Sources/GVRAudioEngine.h; sourceTree = "<group>"; };
-		5381348720860ED80052BEA2 /* GVRCardboardView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GVRCardboardView.h; path = Sources/GVRCardboardView.h; sourceTree = "<group>"; };
-		5381348820860ED80052BEA2 /* GVRHeadTransform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GVRHeadTransform.h; path = Sources/GVRHeadTransform.h; sourceTree = "<group>"; };
-		5381348920860ED80052BEA2 /* GVROverlayView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GVROverlayView.h; path = Sources/GVROverlayView.h; sourceTree = "<group>"; };
-		5381348A20860ED80052BEA2 /* GVRPanoramaView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GVRPanoramaView.h; path = Sources/GVRPanoramaView.h; sourceTree = "<group>"; };
-		5381348B20860ED80052BEA2 /* GVRVideoView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GVRVideoView.h; path = Sources/GVRVideoView.h; sourceTree = "<group>"; };
-		5381348C20860ED80052BEA2 /* GVRWidgetView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GVRWidgetView.h; path = Sources/GVRWidgetView.h; sourceTree = "<group>"; };
-		5381348D20860ED80052BEA2 /* libGVRSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGVRSDK.a; path = Libraries/libGVRSDK.a; sourceTree = "<group>"; };
-		5381348F20860ED80052BEA2 /* CardboardSDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = CardboardSDK.bundle; path = Resources/CardboardSDK.bundle; sourceTree = "<group>"; };
-		5381349020860ED80052BEA2 /* GoogleKitCore.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GoogleKitCore.bundle; path = Resources/GoogleKitCore.bundle; sourceTree = "<group>"; };
-		5381349120860ED80052BEA2 /* GoogleKitDialogs.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GoogleKitDialogs.bundle; path = Resources/GoogleKitDialogs.bundle; sourceTree = "<group>"; };
-		5381349220860ED80052BEA2 /* GoogleKitHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GoogleKitHUD.bundle; path = Resources/GoogleKitHUD.bundle; sourceTree = "<group>"; };
-		5381349320860ED80052BEA2 /* MaterialRobotoFontLoader.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = MaterialRobotoFontLoader.bundle; path = Resources/MaterialRobotoFontLoader.bundle; sourceTree = "<group>"; };
+		53E3EC2C208899ED00FE2726 /* libGVRSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGVRSDK.a; sourceTree = "<group>"; };
+		53E3EC2E208899ED00FE2726 /* CardboardSDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = CardboardSDK.bundle; sourceTree = "<group>"; };
+		53E3EC2F208899ED00FE2726 /* GoogleKitCore.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = GoogleKitCore.bundle; sourceTree = "<group>"; };
+		53E3EC30208899ED00FE2726 /* GoogleKitDialogs.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = GoogleKitDialogs.bundle; sourceTree = "<group>"; };
+		53E3EC31208899ED00FE2726 /* GoogleKitHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = GoogleKitHUD.bundle; sourceTree = "<group>"; };
+		53E3EC32208899ED00FE2726 /* MaterialRobotoFontLoader.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = MaterialRobotoFontLoader.bundle; sourceTree = "<group>"; };
+		53E3EC34208899ED00FE2726 /* GVRAudioEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GVRAudioEngine.h; sourceTree = "<group>"; };
+		53E3EC35208899ED00FE2726 /* GVRCardboardView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GVRCardboardView.h; sourceTree = "<group>"; };
+		53E3EC36208899ED00FE2726 /* GVRHeadTransform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GVRHeadTransform.h; sourceTree = "<group>"; };
+		53E3EC37208899ED00FE2726 /* GVROverlayView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GVROverlayView.h; sourceTree = "<group>"; };
+		53E3EC38208899ED00FE2726 /* GVRPanoramaView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GVRPanoramaView.h; sourceTree = "<group>"; };
+		53E3EC39208899ED00FE2726 /* GVRVideoView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GVRVideoView.h; sourceTree = "<group>"; };
+		53E3EC3A208899ED00FE2726 /* GVRWidgetView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GVRWidgetView.h; sourceTree = "<group>"; };
+		53E3EC3F208899ED00FE2726 /* gvr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gvr.h; sourceTree = "<group>"; };
+		53E3EC40208899ED00FE2726 /* gvr_audio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gvr_audio.h; sourceTree = "<group>"; };
+		53E3EC41208899ED00FE2726 /* gvr_audio_surround.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gvr_audio_surround.h; sourceTree = "<group>"; };
+		53E3EC42208899ED00FE2726 /* gvr_types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gvr_types.h; sourceTree = "<group>"; };
+		53E3EC43208899ED00FE2726 /* gvr_version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gvr_version.h; sourceTree = "<group>"; };
 		6854AAF81FDB83A200160BA2 /* VrVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VrVideoView.m; sourceTree = "<group>"; };
 		68B604421FDA47BB00F134F7 /* PanoramaManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PanoramaManager.h; sourceTree = "<group>"; };
 		68B604431FDA47BB00F134F7 /* PanoramaManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PanoramaManager.m; sourceTree = "<group>"; };
@@ -78,52 +78,92 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		5381348E20860ED80052BEA2 /* Frameworks */ = {
+		53E3EC2A208899ED00FE2726 /* GVRSDK */ = {
 			isa = PBXGroup;
 			children = (
-				5381348D20860ED80052BEA2 /* libGVRSDK.a */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		5381349420860ED80052BEA2 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				5381348F20860ED80052BEA2 /* CardboardSDK.bundle */,
-				5381349020860ED80052BEA2 /* GoogleKitCore.bundle */,
-				5381349120860ED80052BEA2 /* GoogleKitDialogs.bundle */,
-				5381349220860ED80052BEA2 /* GoogleKitHUD.bundle */,
-				5381349320860ED80052BEA2 /* MaterialRobotoFontLoader.bundle */,
-			);
-			name = Resources;
-			sourceTree = "<group>";
-		};
-		5381349520860ED80052BEA2 /* GVRSDK */ = {
-			isa = PBXGroup;
-			children = (
-				5381348120860ED80052BEA2 /* gvr.h */,
-				5381348220860ED80052BEA2 /* gvr_audio.h */,
-				5381348320860ED80052BEA2 /* gvr_audio_surround.h */,
-				5381348420860ED80052BEA2 /* gvr_types.h */,
-				5381348520860ED80052BEA2 /* gvr_version.h */,
-				5381348620860ED80052BEA2 /* GVRAudioEngine.h */,
-				5381348720860ED80052BEA2 /* GVRCardboardView.h */,
-				5381348820860ED80052BEA2 /* GVRHeadTransform.h */,
-				5381348920860ED80052BEA2 /* GVROverlayView.h */,
-				5381348A20860ED80052BEA2 /* GVRPanoramaView.h */,
-				5381348B20860ED80052BEA2 /* GVRVideoView.h */,
-				5381348C20860ED80052BEA2 /* GVRWidgetView.h */,
-				5381348E20860ED80052BEA2 /* Frameworks */,
-				5381349420860ED80052BEA2 /* Resources */,
+				53E3EC2B208899ED00FE2726 /* Libraries */,
+				53E3EC2D208899ED00FE2726 /* Resources */,
+				53E3EC33208899ED00FE2726 /* Sources */,
 			);
 			name = GVRSDK;
-			path = ../example/ios/Pods/GVRSDK;
+			path = ../../../ios/Pods/GVRSDK;
+			sourceTree = "<group>";
+		};
+		53E3EC2B208899ED00FE2726 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				53E3EC2C208899ED00FE2726 /* libGVRSDK.a */,
+			);
+			path = Libraries;
+			sourceTree = "<group>";
+		};
+		53E3EC2D208899ED00FE2726 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				53E3EC2E208899ED00FE2726 /* CardboardSDK.bundle */,
+				53E3EC2F208899ED00FE2726 /* GoogleKitCore.bundle */,
+				53E3EC30208899ED00FE2726 /* GoogleKitDialogs.bundle */,
+				53E3EC31208899ED00FE2726 /* GoogleKitHUD.bundle */,
+				53E3EC32208899ED00FE2726 /* MaterialRobotoFontLoader.bundle */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		53E3EC33208899ED00FE2726 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				53E3EC34208899ED00FE2726 /* GVRAudioEngine.h */,
+				53E3EC35208899ED00FE2726 /* GVRCardboardView.h */,
+				53E3EC36208899ED00FE2726 /* GVRHeadTransform.h */,
+				53E3EC37208899ED00FE2726 /* GVROverlayView.h */,
+				53E3EC38208899ED00FE2726 /* GVRPanoramaView.h */,
+				53E3EC39208899ED00FE2726 /* GVRVideoView.h */,
+				53E3EC3A208899ED00FE2726 /* GVRWidgetView.h */,
+				53E3EC3B208899ED00FE2726 /* vr */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		53E3EC3B208899ED00FE2726 /* vr */ = {
+			isa = PBXGroup;
+			children = (
+				53E3EC3C208899ED00FE2726 /* gvr */,
+			);
+			path = vr;
+			sourceTree = "<group>";
+		};
+		53E3EC3C208899ED00FE2726 /* gvr */ = {
+			isa = PBXGroup;
+			children = (
+				53E3EC3D208899ED00FE2726 /* capi */,
+			);
+			path = gvr;
+			sourceTree = "<group>";
+		};
+		53E3EC3D208899ED00FE2726 /* capi */ = {
+			isa = PBXGroup;
+			children = (
+				53E3EC3E208899ED00FE2726 /* include */,
+			);
+			path = capi;
+			sourceTree = "<group>";
+		};
+		53E3EC3E208899ED00FE2726 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				53E3EC3F208899ED00FE2726 /* gvr.h */,
+				53E3EC40208899ED00FE2726 /* gvr_audio.h */,
+				53E3EC41208899ED00FE2726 /* gvr_audio_surround.h */,
+				53E3EC42208899ED00FE2726 /* gvr_types.h */,
+				53E3EC43208899ED00FE2726 /* gvr_version.h */,
+			);
+			path = include;
 			sourceTree = "<group>";
 		};
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				5381349520860ED80052BEA2 /* GVRSDK */,
+				53E3EC2A208899ED00FE2726 /* GVRSDK */,
 				68B604481FDA47CA00F134F7 /* VrVideoManager.h */,
 				68B604491FDA47CA00F134F7 /* VrVideoManager.m */,
 				68B6044A1FDA47CA00F134F7 /* VrVideoView.h */,

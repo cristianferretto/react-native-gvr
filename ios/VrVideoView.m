@@ -187,7 +187,7 @@ didFailToLoadContent:(id)content
 - (void)videoView:(GVRVideoView*)videoView didUpdatePosition:(NSTimeInterval)position {
     if (self.onUpdatePosition != nil) {
         float progress = position / _videoView.duration;
-        self.onUpdatePosition(@{@"position": [NSNumber numberWithDouble:progress]});
+        self.onUpdatePosition(@{@"position": [NSNumber numberWithDouble:progress], @"duration": [NSNumber numberWithDouble:_videoView.duration, @"playableDuration": [NSNumber numberWithDouble:_videoView.playableDuration]]});
     }
 }
 

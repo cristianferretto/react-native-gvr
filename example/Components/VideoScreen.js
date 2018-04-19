@@ -36,10 +36,11 @@ export default class VideoScreen extends React.Component {
   }
 
   onContentLoad = event => {
-    console.log("Content load", event.nativeEvent)
+    console.log('Content load', event.nativeEvent)
   }
 
   onTap = () => {
+    console.log('On tap')
     if (this.state.displayMode !== 'embedded') {
       this.setState({ paused: !this.state.paused })
     }
@@ -50,6 +51,7 @@ export default class VideoScreen extends React.Component {
   }
 
   onChangeDisplayMode = event => {
+    console.log('On change display mode', event.nativeEvent)
     if (this.state.paused && event.nativeEvent.mode !== 'embedded') {
       this.setState({ paused: false })
     }
