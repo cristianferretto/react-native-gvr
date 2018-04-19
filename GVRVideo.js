@@ -55,9 +55,10 @@ class VideoView extends React.Component {
   }
 
   render () {
-    const { source } = this.props
+    const { source, paused } = this.props
     return <RCTViedoView
       {...this.props}
+      paused={paused == null ? false : paused}
       ref={this.setRef}
       src={{
         uri: source.uri,
