@@ -86,6 +86,7 @@ import { VideoView } from 'react-native-gvr'
   enableInfoButton={false}
   onContentLoad={this.onContentLoad}
   onTap={this.onTap}
+  onFinish={this.onFinish}
   onUpdatePosition={this.onUpdatePosition}
   onChangeDisplayMode={this.onChangeDisplayMode}
 />
