@@ -13,6 +13,7 @@ const IS_IOS = Platform.OS === 'ios'
 const VrVideoModule = IS_IOS ? NativeModules['VrVideoManager'] : NativeModules['VrVideoModule']
 
 class VideoView extends React.Component {
+
   setRef = view => {
     this.rctView = view
   }
@@ -88,6 +89,7 @@ VideoView.propTypes = {
   hidesTransitionView: PropTypes.bool,
   onContentLoad: PropTypes.func,
   onTap: PropTypes.func,
+  onFinish: PropTypes.func,
   onUpdatePosition: PropTypes.func,
   onChangeDisplayMode: PropTypes.func
 }

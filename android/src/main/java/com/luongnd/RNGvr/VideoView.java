@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.annotation.UiThread;
+import androidx.annotation.UiThread;
 import android.util.Log;
 import android.widget.RelativeLayout;
 
@@ -149,7 +149,7 @@ public class VideoView extends RelativeLayout {
 
         @Override
         public void onLoadSuccess() {
-            emitEvent("onContentLoaded", null);
+            // emitEvent("onContentLoaded", null);
         }
 
         /**
@@ -177,6 +177,12 @@ public class VideoView extends RelativeLayout {
         @Override
         public void onClick() {
             emitEvent("onTap", null);
+        }
+
+        @Override
+        public void onCompletion() {
+            // VrWidgetView.seekTo(0);
+            emitEvent("onFinish", null);
         }
 
         @Override
@@ -223,7 +229,6 @@ public class VideoView extends RelativeLayout {
             return true;
         }
     }
-
 
     void emitEvent(String name, @Nullable WritableMap event) {
         if (event == null) {

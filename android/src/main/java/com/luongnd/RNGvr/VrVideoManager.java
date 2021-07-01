@@ -1,6 +1,6 @@
 package com.luongnd.RNGvr;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.facebook.infer.annotation.Assertions;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -128,6 +128,7 @@ public class VrVideoManager extends SimpleViewManager<VideoView> {
         return builder
                 .put("onContentLoad", MapBuilder.of("registrationName", "onContentLoad"))
                 .put("onTap", MapBuilder.of("registrationName", "onTap"))
+                .put("onFinish", MapBuilder.of("registrationName", "onFinish"))
                 .put("onUpdatePosition", MapBuilder.of("registrationName", "onUpdatePosition"))
                 .put("onChangeDisplayMode", MapBuilder.of("registrationName", "onChangeDisplayMode"))
                 .build();

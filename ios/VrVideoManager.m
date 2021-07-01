@@ -37,6 +37,7 @@ RCT_EXPORT_VIEW_PROPERTY(volume, float);
 
 RCT_EXPORT_VIEW_PROPERTY(onContentLoad, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onTap, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onFinish, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onUpdatePosition, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onChangeDisplayMode, RCTBubblingEventBlock)
 
